@@ -1,8 +1,5 @@
 from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
-DATA_DIR.mkdir(exist_ok=True)
+from .paths import BASE_DIR, DATA_DIR
 
 SECRET_KEY = 'django-insecure-*mbv3=!6oi$ky&@!^uk8#tg5v7m6a)(-bh=t=n4e8k8tj5tg$v'
 DEBUG = True

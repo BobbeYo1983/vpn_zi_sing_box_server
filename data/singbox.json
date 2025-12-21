@@ -1,0 +1,37 @@
+{
+  "inbounds": [
+    {
+      "type": "vless",
+      "tag": "vless-in",
+      "listen": "0.0.0.0",
+      "listen_port": "443",
+      "users": [
+        {
+          "name": "user3",
+          "uuid": "8348db1e-f267-4cde-85f3-a0e0e5a2d9b4",
+          "flow": "xtls-rprx-vision"
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "server_name": "www.yandex.ru",
+        "reality": {
+          "enabled": true,
+          "handshake": {
+            "server": "www.yandex.ru",
+            "server_port": 443
+          },
+          "private_key": "0PZf_AeNiEPEEAJLXKHrTyjuInwhyicPOC_Suo7di3I",
+          "short_id": [
+            "b360dd40"
+          ]
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct"
+    }
+  ]
+}

@@ -4,9 +4,9 @@ import subprocess
 from pathlib import Path
 from .models import VpnUser
 from urllib.parse import quote
+from core.paths import DATA_DIR
 
-CONFIG_PATH = Path("/singbox/config.json")
-
+CONFIG_PATH = DATA_DIR / "singbox.json"
 FLOW = "xtls-rprx-vision"
 SERVER = os.environ["SINGBOX_SERVER"]
 SERVER_PORT = os.environ["SERVER_PORT"]
@@ -57,11 +57,24 @@ def write_config():
         encoding="utf-8"
     )
 
+def check_config():
+    subprocess.run(
+        ["sing-box", "check", "-C", "/etc/sing-box/"],
+        check=True
+    )
+
 def reload_singbox():
     subprocess.run(
         ["sudo", "systemctl", "reload", "sing-box"],
         check=True
     )
+
+# def reload_singbox():
+#     subprocess.run(
+#         "pidof sing-box | xargs sudo kill -HUP",
+#         shell=True,
+#         check=True
+#     )
 
 def build_vless_uri(user):
     return (

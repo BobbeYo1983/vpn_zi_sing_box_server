@@ -2,6 +2,9 @@
 sudo visudo
 www-data ALL=(root) NOPASSWD: /bin/systemctl reload sing-box
 
+sudo visudo
+django ALL=(root) NOPASSWD: /bin/kill -HUP *
+
 #Запуск с пересборкой 
 docker-compose up -d --build
 

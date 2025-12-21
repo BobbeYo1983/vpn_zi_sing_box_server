@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from .models import VpnUser
 from .serializers import VpnUserSerializer
-from .singbox import write_config, reload_singbox
+from .singbox import write_config, check_config, reload_singbox
 
 class VpnUserViewSet(ModelViewSet):
     queryset = VpnUser.objects.all()
@@ -10,6 +10,7 @@ class VpnUserViewSet(ModelViewSet):
     # приватный метод для повторяющихся действий
     def _after_change(self):
         write_config()
+        check_config()
         # reload_singbox()  # включить на проде
 
     def perform_create(self, serializer):
