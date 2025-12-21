@@ -1,0 +1,3 @@
+# sudo без пароля
+sudo visudo
+www-data ALL=(root) NOPASSWD: /bin/systemctl reload sing-box

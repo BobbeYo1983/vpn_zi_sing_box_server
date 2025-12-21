@@ -1,0 +1,29 @@
+# Python
+pycache/
+*.py[cod]
+*.sqlite3
+
+# Env
+.env
+
+# Собранные статические файлы
+staticfiles/
+staticfiles/* 
+
+# Медиафайлы (загружаемые пользователями)
+media/
+media/*
+
+# Virtualenv
+.venv/
+
+# IDE
+.idea/
+
+# Logs
+*.log
+/logs
+
+# Secrets
+/keys
+/certs
