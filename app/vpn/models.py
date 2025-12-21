@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 
 class VpnUser(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     enabled = models.BooleanField(default=True)
 

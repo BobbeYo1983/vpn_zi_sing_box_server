@@ -1,9 +1,10 @@
 services:
   sing_box_server:
-    build: ./app
+    build: .
     env_file: .env
     volumes:
       - /etc/sing-box:/singbox
+      - ./data:/app/data
     ports:
       - "8001:8001"
     privileged: true

@@ -1,0 +1,23 @@
+python-dotenv==1.1.1                    # для работы с конфигурацией окружения, файл .env
+django==5.2.6                           # при выборе версии учитывать совместимость с версией и образом python из Dockerfile
+gunicorn==23.0.0                        # сервер
+#psycopg[binary]==3.2.10                 # для Postgress
+djangorestframework==3.16.1             # для REST API
+#django-filter==25.2                     # для выборки через REST по фильтру
+#drf-spectacular==0.29.0                 # для генерации документации REST API
+#djangorestframework-simplejwt==5.5.1    # для JWT-токенов
+
+#cryptography==41.0.7                    # для шифрования
+#pyOpenSSL==23.3.0                       # для шифрования
+#django-csp==4.0                         # для безопасности
+#django-cors-headers==4.9.0              # CORS, заголовки
+
+#django-prometheus==2.4.1                # для мониторинга
+
+#yookassa==3.8.0                         # платежи ЮКасса
+#python-telegram-bot==22.5               # для телеграм бота
+
+whitenoise==6.11.0                      # для отдачи статики
+
+debugpy==1.8.17                         # для отладки
+django-debug-toolbar==6.0.0             # для расширения отладочной информации

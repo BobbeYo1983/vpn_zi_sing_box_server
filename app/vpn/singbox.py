@@ -12,6 +12,7 @@ SERVER = os.environ["SINGBOX_SERVER"]
 SERVER_PORT = os.environ["SERVER_PORT"]
 SERVER_NAME = os.environ["SINGBOX_SERVER_NAME"]
 PRIVATE_KEY = os.environ["SINGBOX_REALITY_PRIVATE_KEY"]
+PUBLIC_KEY = os.environ["SINGBOX_REALITY_PUBLIC_KEY"]
 SHORT_ID = os.environ["SINGBOX_SHORT_ID"]
 
 def build_users():
@@ -70,7 +71,7 @@ def build_vless_uri(user):
         f"&flow={FLOW}"
         f"&sni={SERVER_NAME}"
         f"&fp=chrome"
-        f"&pbk={PRIVATE_KEY}"
+        f"&pbk={PUBLIC_KEY}"
         f"&sid={SHORT_ID}"
-        f"#"{quote(user.name)}"
+        f"#{quote(user.name)}"
     )

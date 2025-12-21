@@ -13,9 +13,14 @@ RUN python -m pip install --upgrade pip
 
 WORKDIR /app
 
-COPY requirements.txt /app/requirements.txt
+COPY /app/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-COPY . /app
+COPY ./app/ .
 
+# Копируем подготовительный скрипт перед запуском приложения
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["gunicorn", "core.wsgi:application", "-b", "0.0.0.0:8001", "--workers", "3"]

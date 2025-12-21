@@ -7,17 +7,19 @@ class VpnUserViewSet(ModelViewSet):
     queryset = VpnUser.objects.all()
     serializer_class = VpnUserSerializer
 
+    # приватный метод для повторяющихся действий
+    def _after_change(self):
+        write_config()
+        # reload_singbox()  # включить на проде
+
     def perform_create(self, serializer):
         serializer.save()
-        write_config()
-        reload_singbox()
+        self._after_change()
 
     def perform_update(self, serializer):
         serializer.save()
-        write_config()
-        reload_singbox()
+        self._after_change()
 
     def perform_destroy(self, instance):
         instance.delete()
-        write_config()
-        reload_singbox()
+        self._after_change()
