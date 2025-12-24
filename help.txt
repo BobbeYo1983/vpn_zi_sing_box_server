@@ -8,5 +8,6 @@ django ALL=(root) NOPASSWD: /bin/kill -HUP *
 #Запуск с пересборкой 
 docker-compose up -d --build
 
-# выполнить миграции
+# удалить всех пользователей
+curl -X DELETE http://vpnzi.ru:8001/api/v1/users/delete_all/
 

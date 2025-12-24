@@ -1,9 +1,23 @@
 from pathlib import Path
 from .paths import BASE_DIR, DATA_DIR
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {'class': 'logging.StreamHandler'},
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG', #TODO в проде убрать
+    },
+}
+
 SECRET_KEY = 'django-insecure-*mbv3=!6oi$ky&@!^uk8#tg5v7m6a)(-bh=t=n4e8k8tj5tg$v'
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = True    #TODO в проде убрать
+ALLOWED_HOSTS = [
+    "vpnzi.ru",
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',

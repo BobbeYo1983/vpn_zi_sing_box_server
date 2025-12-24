@@ -1,12 +1,10 @@
 import json
 import os
 import subprocess
-from pathlib import Path
+from core.paths import SINGBOX_CONFIG_PATH
 from .models import VpnUser
 from urllib.parse import quote
-from core.paths import DATA_DIR
 
-CONFIG_PATH = DATA_DIR / "singbox.json"
 FLOW = "xtls-rprx-vision"
 SERVER = os.environ["SINGBOX_SERVER"]
 SERVER_PORT = os.environ["SERVER_PORT"]
@@ -60,8 +58,8 @@ def write_config():
         ]
     }
 
-    CONFIG_PATH.write_text(
-        json.dumps(config, indent=2),
+    SINGBOX_CONFIG_PATH.write_text(
+        json.dumps(config, indent=2, ensure_ascii=False),
         encoding="utf-8"
     )
 

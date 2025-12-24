@@ -16,6 +16,9 @@ python manage.py migrate --noinput
 echo "Collect static files..."
 python manage.py collectstatic --noinput
 
+# Генерируем конфиг singbox при старте контейнера
+python -c "from vpn.singbox import write_config; write_config()"
+
 # -------------------------
 # Запуск контейнера
 # -------------------------
