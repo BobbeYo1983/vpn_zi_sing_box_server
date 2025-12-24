@@ -27,3 +27,6 @@ media/*
 # Secrets
 /keys
 /certs
+
+# Прочие данные
+/data
