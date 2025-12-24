@@ -27,6 +27,9 @@ def build_users():
 
 def write_config():
     config = {
+        "log": {
+            "level": "info"
+        },
         "inbounds": [
             {
                 "type": "vless",
@@ -49,7 +52,12 @@ def write_config():
                 }
             }
         ],
-        "outbounds": [{"type": "direct"}]
+        "outbounds": [
+            {
+                "type": "direct",
+                "tag": "direct"
+            }
+        ]
     }
 
     CONFIG_PATH.write_text(
