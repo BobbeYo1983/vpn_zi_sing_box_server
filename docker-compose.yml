@@ -4,7 +4,7 @@ services:
     env_file: .env
     volumes:
       - ./data:/app/data
-      - /etc/sing-box/config.json:/app/data/singbox.json
+#      - /etc/sing-box/config.json:/app/data/singbox.json
     ports:
       - "8001:8001"
     privileged: true

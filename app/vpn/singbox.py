@@ -63,17 +63,17 @@ def write_config():
         encoding="utf-8"
     )
 
-def check_config():
-    subprocess.run(
-        ["sing-box", "check", "-C", "/etc/sing-box/"],
-        check=True
-    )
+# def check_config():
+#     subprocess.run(
+#         ["sing-box", "check", "-C", "/etc/sing-box/"],
+#         check=True
+#     )
 
-def reload_singbox():
-    subprocess.run(
-        ["sudo", "systemctl", "reload", "sing-box"],
-        check=True
-    )
+# def reload_singbox():
+#     subprocess.run(
+#         ["sudo", "systemctl", "reload", "sing-box"],
+#         check=True
+#     )
 
 # def reload_singbox():
 #     subprocess.run(
