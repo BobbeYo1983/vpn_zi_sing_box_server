@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from .models import VpnUser
 from .serializers import VpnUserSerializer
-from .singbox import write_config, check_config, reload_singbox
+from .singbox import write_config#, check_config, reload_singbox
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
