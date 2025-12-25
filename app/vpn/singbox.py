@@ -7,7 +7,7 @@ from urllib.parse import quote
 
 FLOW = "xtls-rprx-vision"
 SERVER = os.environ["SINGBOX_SERVER"]
-SERVER_PORT = os.environ["SERVER_PORT"]
+SERVER_PORT = int(os.environ["SERVER_PORT"])
 SERVER_NAME = os.environ["SINGBOX_SERVER_NAME"]
 PRIVATE_KEY = os.environ["SINGBOX_REALITY_PRIVATE_KEY"]
 PUBLIC_KEY = os.environ["SINGBOX_REALITY_PUBLIC_KEY"]
@@ -63,34 +63,17 @@ def write_config():
         encoding="utf-8"
     )
 
-# def check_config():
-#     subprocess.run(
-#         ["sing-box", "check", "-C", "/etc/sing-box/"],
-#         check=True
-#     )
-
-# def reload_singbox():
-#     subprocess.run(
-#         ["sudo", "systemctl", "reload", "sing-box"],
-#         check=True
-#     )
-
-# def reload_singbox():
-#     subprocess.run(
-#         "pidof sing-box | xargs sudo kill -HUP",
-#         shell=True,
-#         check=True
-#     )
 
 def build_vless_uri(user):
     return (
         f"vless://{user.uuid}@{SERVER}:{SERVER_PORT}"
-        f"?type=tcp"
+        f"?encryption=none" 
         f"&security=reality"
-        f"&flow={FLOW}"
+        f"&fp=firefox"  
         f"&sni={SERVER_NAME}"
-        f"&fp=chrome"
         f"&pbk={PUBLIC_KEY}"
         f"&sid={SHORT_ID}"
+        f"&flow={FLOW}"
+        f"&type=tcp"                
         f"#{quote(user.name)}"
     )

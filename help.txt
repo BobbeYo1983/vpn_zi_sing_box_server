@@ -1,3 +1,8 @@
+# LINUX ##########################################
+
+# подключение к серверу
+ssh -i C:\Users\PC\.ssh\id_ed25519 root@85.198.91.116
+
 # sudo без пароля
 sudo visudo
 www-data ALL=(root) NOPASSWD: /bin/systemctl reload sing-box
@@ -5,12 +10,34 @@ www-data ALL=(root) NOPASSWD: /bin/systemctl reload sing-box
 sudo visudo
 django ALL=(root) NOPASSWD: /bin/kill -HUP *
 
+# DOCKER ##########################################
+
 #Запуск с пересборкой 
 docker-compose up -d --build
+
+# SERVICE ##########################################
 
 # удалить всех пользователей
 curl -X DELETE http://vpnzi.ru:8001/api/v1/users/delete_all/
 
-# конфигурация
+# SING BOX ##########################################
+
+# посмотреть конфигурацию
 nano /etc/sing-box/config.json
+cat /etc/sing-box/config.json
+
+# проверить конфигурацию
+sing-box check -c /etc/sing-box/config.json
+
+# перезапустить 
+systemctl restart sing-box
+
+# применить конфигурацию
+systemctl reload sing-box
+
+# статус
+systemctl status sing-box -l
+
+# логи
+journalctl -u sing-box -n 30
 
