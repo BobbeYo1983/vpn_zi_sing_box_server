@@ -1,10 +1,14 @@
 services:
-  sing_box_server:
+  vpn_zi_sing_box_server:
     build: .
     env_file: .env
     volumes:
       - ./data:/app/data
       - /etc/sing-box:/app/sing-box
-    ports:
-      - "8001:8001"
-    privileged: true
+    restart: unless-stopped
+    networks:
+      - vpn_zi_network
+
+networks:
+  vpn_zi_network:
+    external: true

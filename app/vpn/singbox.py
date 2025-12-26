@@ -32,7 +32,7 @@ def write_config():
             {
                 "type": "vless",
                 "tag": "vless-in",
-                "listen": "0.0.0.0",
+                "listen": "85.198.90.103",
                 "listen_port": SERVER_PORT,
                 "users": build_users(),
                 "tls": {

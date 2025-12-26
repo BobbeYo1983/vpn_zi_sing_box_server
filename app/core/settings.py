@@ -1,5 +1,5 @@
-from pathlib import Path
-from .paths import BASE_DIR, DATA_DIR
+import os
+from .paths import DATA_DIR
 
 LOGGING = {
     'version': 1,
@@ -15,9 +15,14 @@ LOGGING = {
 
 SECRET_KEY = 'django-insecure-*mbv3=!6oi$ky&@!^uk8#tg5v7m6a)(-bh=t=n4e8k8tj5tg$v'
 DEBUG = True    #TODO в проде убрать
-ALLOWED_HOSTS = [
-    "vpnzi.ru",
-]
+
+raw_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS")
+ALLOWED_HOSTS = [h for h in raw_hosts.split(",") if h]
+
+#CORS_ALLOWED_ORIGINS = ["https://vpnzi.ru"]
+#CORS_ALLOW_ALL_ORIGINS = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -83,9 +88,17 @@ TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+STATIC_URL = "/sb/static/"
+STATIC_ROOT = DATA_DIR / "staticfiles"
+MEDIA_URL = "/sb/media/"
+MEDIA_ROOT = DATA_DIR / "media"
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
+
+
 
 

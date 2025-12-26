@@ -5,10 +5,13 @@ from .singbox import write_config#, check_config, reload_singbox
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 
 class VpnUserViewSet(ModelViewSet):
     queryset = VpnUser.objects.all()
     serializer_class = VpnUserSerializer
+    permission_classes = [AllowAny] 
+    authentication_classes = []  # временно отключаем
 
     # приватный метод для повторяющихся действий
     def _after_change(self):
