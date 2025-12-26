@@ -19,11 +19,6 @@ DEBUG = True    #TODO в проде убрать
 raw_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS")
 ALLOWED_HOSTS = [h for h in raw_hosts.split(",") if h]
 
-#CORS_ALLOWED_ORIGINS = ["https://vpnzi.ru"]
-#CORS_ALLOW_ALL_ORIGINS = True
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -99,6 +94,13 @@ REST_FRAMEWORK = {
     ],
 }
 
+#CORS_ALLOWED_ORIGINS = ["https://vpnzi.ru"]
+#CORS_ALLOW_ALL_ORIGINS = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+FORCE_SCRIPT_NAME = "/sb"
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
 
 
 
