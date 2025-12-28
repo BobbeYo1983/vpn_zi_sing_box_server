@@ -32,7 +32,7 @@ def write_config():
             {
                 "type": "vless",
                 "tag": "vless-in",
-                "listen": "85.198.90.103",
+                "listen": "0.0.0.0",
                 "listen_port": SERVER_PORT,
                 "users": build_users(),
                 "tls": {
@@ -66,7 +66,7 @@ def write_config():
 
 def build_vless_uri(user):
     return (
-        f"vless://{user.uuid}@{SERVER}:{SERVER_PORT}"
+        f"vless://{user.uuid}@{SERVER}:{SERVER_PORT}" #TODO сделать, чтобы автоматом брался IP
         f"?encryption=none" 
         f"&security=reality"
         f"&fp=firefox"  

@@ -83,9 +83,9 @@ TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "/sb/static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = DATA_DIR / "staticfiles"
-MEDIA_URL = "/sb/media/"
+MEDIA_URL = "/media/"
 MEDIA_ROOT = DATA_DIR / "media"
 
 REST_FRAMEWORK = {
@@ -97,10 +97,10 @@ REST_FRAMEWORK = {
 #CORS_ALLOWED_ORIGINS = ["https://vpnzi.ru"]
 #CORS_ALLOW_ALL_ORIGINS = True
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-FORCE_SCRIPT_NAME = "/sb"
-USE_X_FORWARDED_HOST = True
-USE_X_FORWARDED_PORT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# FORCE_SCRIPT_NAME = "/sb"
+# USE_X_FORWARDED_HOST = True
+# USE_X_FORWARDED_PORT = True
 
 
 
