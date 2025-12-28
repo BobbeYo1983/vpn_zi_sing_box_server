@@ -16,7 +16,8 @@ SHORT_ID = os.environ["SINGBOX_SHORT_ID"]
 def build_users():
     return [
         {
-            "name": u.name,
+            "tg_id": u.tg_id,
+            "tg_username": u.tg_username,
             "uuid": str(u.uuid),
             "flow": FLOW,
         }
@@ -91,5 +92,5 @@ def build_vless_uri(user):
         f"&sid={SHORT_ID}"
         f"&flow={FLOW}"
         f"&type=tcp"                
-        f"#{quote(user.name)}"
+        f"#{quote(user.tg_username)}({user.tg_id})"
     )

@@ -16,8 +16,6 @@ class VpnUserViewSet(ModelViewSet):
     # приватный метод для повторяющихся действий
     def _after_change(self):
         write_config()
-        #check_config()
-        #reload_singbox()
 
     def perform_create(self, serializer):
         serializer.save()

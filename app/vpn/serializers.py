@@ -4,15 +4,14 @@ from .singbox import build_vless_uri
 from rest_framework.validators import UniqueValidator
 
 class VpnUserSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(
-        max_length=50,
+    tg_id = serializers.CharField(
+        max_length=64,
         validators=[UniqueValidator(queryset=VpnUser.objects.all())]
     )
     vless_uri = serializers.SerializerMethodField()
 
     class Meta:
         model = VpnUser
-        #ields = ['id', 'name', 'uuid', 'enabled', 'vless_uri']
         fields = "__all__"
         read_only_fields = ("enabled",)
 
