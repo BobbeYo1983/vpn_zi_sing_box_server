@@ -18,6 +18,9 @@ curl -X DELETE https://vpnzi.ru/sb/api/users/delete_all/
 # Сгенерировать пару ключей
 sing-box generate reality-keypair
 
+# Генерация UUID
+sing-box generate uuid
+
 # посмотреть конфигурацию
 nano /etc/sing-box/config.json
 cat /etc/sing-box/config.json
@@ -39,39 +42,39 @@ journalctl -u sing-box -n 20
 
 # Создание сервера #####################################################
 
-Версия Ubuntu 22.04 x64
-Выбрать установку Docker
+#Версия Ubuntu 22.04 x64
+#Выбрать установку Docker
 
-Обновляем пакеты:
+#Обновляем пакеты:
 sudo apt update && sudo apt upgrade -y
-Configuration file '/etc/cloud/cloud.cfg' тут можно y
+#Configuration file '/etc/cloud/cloud.cfg' тут можно нажать y
 
-Проверяем свободный порт 443:
+#Проверяем свободный порт 443:
 sudo ss -lntp | grep 443
-Если кто-то слушает, нужно остановить сервис или выбрать другой порт.
+#Если кто-то слушает, нужно остановить сервис или выбрать другой порт.
 
-Установка singbox через скрипт
+#Установка singbox через скрипт
 curl -fsSL https://sing-box.app/install.sh | sh
-Проверка установки
+#Проверка установки
 sing-box version
-Включить автозапуск при старте сервака
+#Включить автозапуск при старте сервака
 sudo systemctl enable sing-box
 
 # Установка vpn_zi_sing_box_server
 
-Создать каталог для проектов 
+#Создать каталог для проектов 
 mkdir /home/projects
 
-Клонирование репозитория
-Создать ssh-ключи
+#Клонирование репозитория
+#Создать ssh-ключи
 ssh-keygen -t ed25519 -C "zinindenis1983@ya.ru"
-Показать содержимое публичного ключа
+#Показать содержимое публичного ключа
 cat ~/.ssh/id_ed25519.pub
-Скопировать и добавить ключ в github Заходишь на GitHub → Settings → SSH and GPG keys → New SSH key
-Проверить подключение ssh -T git@github.com
+#Скопировать и добавить ключ в github Заходишь на GitHub → Settings → SSH and GPG keys → New SSH key
+#Проверить подключение ssh -T git@github.com
 cd /home/projects
 git clone git@github.com:BobbeYo1983/vpn_zi_sing_box_server.git
-Обязательные настройки для пуша
+#Обязательные настройки для пуша
 git config --global user.email "zinindenis1983@ya.ru"
 git config --global user.name "Zinin Denis"
 
@@ -81,7 +84,44 @@ sing-box generate reality-keypair
 Генерация short_id
 sing-box generate rand --hex 8
 
-Генерация UUID
-sing-box generate uuid
+# Настройка автоматического применения конфигурации при перезаписи
 
+# Создаём сервис 
+nano /etc/systemd/system/sing-box-reload.service
 
+# Зписываем в файл
+[Unit]
+Description=Reload sing-box when config changes
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl reload sing-box
+
+ # Создаём path unit (наблюдатель за файлом)
+nano /etc/systemd/system/sing-box.path
+
+# Записываем в файл
+[Unit]
+Description=Watch sing-box config.json for changes
+
+[Path]
+PathModified=/etc/sing-box/config.json
+PathChanged=/etc/sing-box/config.json
+Unit=sing-box-reload.service
+
+[Install]
+WantedBy=multi-user.target
+
+# Перечитать конфигурацию systemd
+systemctl daemon-reexec
+systemctl daemon-reload
+
+# Включаем и запускаем watcher
+systemctl enable sing-box.path
+systemctl start sing-box.path
+
+# Проверка
+systemctl status sing-box.path
+
+# Смотреть логи
+journalctl -u sing-box-reload.service -n 20

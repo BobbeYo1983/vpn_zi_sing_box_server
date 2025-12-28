@@ -24,6 +24,8 @@ def build_users():
     ]
 
 def write_config():
+    # 1️⃣ Формируем конфигурацию полностью,
+    #    независимо от того, есть пользователи или нет
     config = {
         "log": {
             "level": "info"
@@ -33,8 +35,8 @@ def write_config():
                 "type": "vless",
                 "tag": "vless-in",
                 "listen": "0.0.0.0",
-                "listen_port": SERVER_PORT,
-                "users": build_users(),
+                "listen_port": SERVER_PORT,  # ОБЯЗАТЕЛЬНО int, не строка
+                "users": build_users(),      # фильтр по enabled=True внутри
                 "tls": {
                     "enabled": True,
                     "server_name": SERVER_NAME,
@@ -58,10 +60,24 @@ def write_config():
         ]
     }
 
-    SINGBOX_CONFIG_PATH.write_text(
-        json.dumps(config, indent=2, ensure_ascii=False),
+    # 2️⃣ ВАЖНО: атомарная запись
+    #    Пишем сначала во временный файл рядом с основным
+    tmp_path: Path = SINGBOX_CONFIG_PATH.with_suffix(".tmp")
+
+    tmp_path.write_text(
+        json.dumps(
+            config,
+            indent=2,
+            ensure_ascii=False  # чтобы имена пользователей могли быть на русском
+        ),
         encoding="utf-8"
     )
+
+    # 3️⃣ АТОМАРНАЯ замена файла
+    #    - гарантированно меняет inode
+    #    - systemd path unit это УВИДИТ
+    #    - файл никогда не бывает "наполовину записан"
+    os.replace(tmp_path, SINGBOX_CONFIG_PATH)
 
 
 def build_vless_uri(user):
