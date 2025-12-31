@@ -1,4 +1,5 @@
 python-dotenv==1.1.1                    # для работы с конфигурацией окружения, файл .env
+colorlog==6.10.1                        # для разноцветного лога
 django==5.2.6                           # при выборе версии учитывать совместимость с версией и образом python из Dockerfile
 gunicorn==23.0.0                        # сервер
 #psycopg[binary]==3.2.10                 # для Postgress
@@ -17,7 +18,7 @@ djangorestframework==3.16.1             # для REST API
 #yookassa==3.8.0                         # платежи ЮКасса
 #python-telegram-bot==22.5               # для телеграм бота
 
-whitenoise==6.11.0                      # для отдачи статики
+#whitenoise==6.11.0                      # для отдачи статики
 
 debugpy==1.8.17                         # для отладки
 django-debug-toolbar==6.0.0             # для расширения отладочной информации

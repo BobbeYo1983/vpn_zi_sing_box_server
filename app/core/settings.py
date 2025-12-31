@@ -1,23 +1,14 @@
 import os
 from .paths import DATA_DIR
+from utils.logging import LOGGING
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {'class': 'logging.StreamHandler'},
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG', #TODO в проде убрать
-    },
-}
+DEBUG = os.environ.get("DJANGO_DEBUG", "0") == "1"
+HOST_IP = os.environ.get("DJANGO_HOST_IP")
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
-SECRET_KEY = 'django-insecure-*mbv3=!6oi$ky&@!^uk8#tg5v7m6a)(-bh=t=n4e8k8tj5tg$v'
-DEBUG = True    #TODO в проде убрать
-
-raw_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS")
-ALLOWED_HOSTS = [h for h in raw_hosts.split(",") if h]
+ALLOWED_HOSTS = [
+    HOST_IP,
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,10 +29,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = 'core.urls'
 
@@ -85,8 +73,6 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = DATA_DIR / "staticfiles"
-MEDIA_URL = "/media/"
-MEDIA_ROOT = DATA_DIR / "media"
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [

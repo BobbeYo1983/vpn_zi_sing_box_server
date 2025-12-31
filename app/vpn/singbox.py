@@ -16,8 +16,7 @@ SHORT_ID = os.environ["SINGBOX_SHORT_ID"]
 def build_users():
     return [
         {
-            "tg_id": u.tg_id,
-            "tg_username": u.tg_username,
+            "name": f"{u.tg_username}({u.tg_id})",
             "uuid": str(u.uuid),
             "flow": FLOW,
         }
