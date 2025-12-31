@@ -11,16 +11,22 @@ ENV PYTHONUNBUFFERED=1
 # Обновляем pip до последней версии
 RUN python -m pip install --upgrade pip
 
+# Устанавливаем рабочую директорию внутри контейнера. Все последующие команды COPY, RUN, CMD будут выполняться относительно /app.
 WORKDIR /app
 
+# Установка зависимостей
 COPY /app/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
+# Копируем приложение в корень контейнера
 COPY ./app/ .
 
 # Копируем подготовительный скрипт перед запуском приложения
-COPY ./entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY ./entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+# Скрипт перед запуском приложения
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+# Команда запуска
 CMD ["gunicorn", "core.wsgi:application", "-b", "0.0.0.0:8000", "--workers", "3"]
