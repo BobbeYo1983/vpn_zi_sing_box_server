@@ -13,7 +13,6 @@ class VpnUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = VpnUser
         fields = "__all__"
-        read_only_fields = ("enabled",)
 
     def get_vless_uri(self, obj):
         return build_vless_uri(obj)

@@ -10,6 +10,12 @@ docker-compose up -d --build
 
 # SERVICE ##########################################
 
+# создать виртуальное окружение
+apt install python3.10-venv
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
 # удалить всех пользователей
 curl -X DELETE https://vpnzi-dev.ru/api/users/delete_all/
 

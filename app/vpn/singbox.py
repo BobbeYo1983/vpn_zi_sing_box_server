@@ -1,9 +1,12 @@
 import json
 import os
-import subprocess
+import logging
 from core.paths import SINGBOX_CONFIG_PATH
 from .models import VpnUser
 from urllib.parse import quote
+
+
+logger = logging.getLogger(__name__)
 
 FLOW = "xtls-rprx-vision"
 SERVER = os.environ["SINGBOX_SERVER"]
@@ -78,6 +81,8 @@ def write_config():
     #    - systemd path unit это УВИДИТ
     #    - файл никогда не бывает "наполовину записан"
     os.replace(tmp_path, SINGBOX_CONFIG_PATH)
+
+    logger.info("Создана конфигурация для sing-box")
 
 
 def build_vless_uri(user):
