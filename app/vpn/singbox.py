@@ -9,8 +9,8 @@ from urllib.parse import quote
 logger = logging.getLogger(__name__)
 
 FLOW = "xtls-rprx-vision"
-SERVER = os.environ["SINGBOX_SERVER"]
-SERVER_PORT = int(os.environ["SERVER_PORT"])
+SERVER_IP = os.environ["DJANGO_HOST_IP"]
+SERVER_PORT = int(os.environ["SINGBOX_SERVER_PORT"])
 SERVER_NAME = os.environ["SINGBOX_SERVER_NAME"]
 PRIVATE_KEY = os.environ["SINGBOX_REALITY_PRIVATE_KEY"]
 PUBLIC_KEY = os.environ["SINGBOX_REALITY_PUBLIC_KEY"]
@@ -87,7 +87,7 @@ def write_config():
 
 def build_vless_uri(user):
     return (
-        f"vless://{user.uuid}@{SERVER}:{SERVER_PORT}" #TODO сделать, чтобы автоматом брался IP
+        f"vless://{user.uuid}@{SERVER_IP}:{SERVER_PORT}"
         f"?encryption=none" 
         f"&security=reality"
         f"&fp=firefox"  
