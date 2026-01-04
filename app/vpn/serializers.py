@@ -1,17 +1,17 @@
 from rest_framework import serializers
-from .models import VpnUser
+from .models import SingBoxUser
 from .singbox import build_vless_uri
 from rest_framework.validators import UniqueValidator
 
-class VpnUserSerializer(serializers.ModelSerializer):
+class SingBoxUserSerializer(serializers.ModelSerializer):
     tg_id = serializers.CharField(
         max_length=64,
-        validators=[UniqueValidator(queryset=VpnUser.objects.all())]
+        validators=[UniqueValidator(queryset=SingBoxUser.objects.all())]
     )
     vless_uri = serializers.SerializerMethodField()
 
     class Meta:
-        model = VpnUser
+        model = SingBoxUser
         fields = "__all__"
 
     def get_vless_uri(self, obj):

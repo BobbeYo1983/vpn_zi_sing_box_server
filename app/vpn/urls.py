@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
-from .views import VpnUserViewSet
+from .views import SingBoxUserViewSet
 
 router = DefaultRouter()
-router.register("users", VpnUserViewSet)
+router.register("users", SingBoxUserViewSet)
 
 urlpatterns = router.urls

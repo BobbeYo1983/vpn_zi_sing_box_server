@@ -2,7 +2,7 @@ import json
 import os
 import logging
 from core.paths import SINGBOX_CONFIG_PATH
-from .models import VpnUser
+from .models import SingBoxUser
 from urllib.parse import quote
 
 
@@ -23,7 +23,7 @@ def build_users():
             "uuid": str(u.uuid),
             "flow": FLOW,
         }
-        for u in VpnUser.objects.filter(enabled=True)
+        for u in SingBoxUser.objects.filter(enabled=True) # только активные пользователи
     ]
 
 def write_config():
