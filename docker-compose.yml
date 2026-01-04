@@ -1,10 +1,15 @@
 services:
   vpn_zi_sing_box_server:
     build: .
+    image: vpn_zi_sing_box_server
     env_file: .env
     volumes:
-      - ./data:/app/data
-      - /etc/sing-box:/app/sing-box
+      # код и миграции
+      - ./app:/app
+      # данные (БД, статика и тд.)   
+      - ./data:/data
+      # директория с sing-box конфигурацией
+      - /etc/sing-box:/sing-box
     ports:
       - "8000:8000"
     restart: unless-stopped
@@ -17,5 +22,5 @@ services:
       - "80:80"
     volumes:
       - ./deploy/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./data/staticfiles:/staticfiles:ro
+      - ./data/staticfiles:/data/staticfiles:ro
     restart: unless-stopped
