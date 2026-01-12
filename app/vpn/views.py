@@ -25,13 +25,9 @@ class SingBoxUserViewSet(ModelViewSet):
         tg_id = request.data.get("tg_id")
         tg_username = request.data.get("tg_username")
 
-        logger.info(
-            "Запрос на создание/активацию sing-box-пользователя",
-            extra={
-                "tg_id": tg_id,
-                "tg_username": tg_username,
-            },
-        )
+        extra_info_user={"tg_id": tg_id, "tg_username": tg_username}
+
+        logger.info("Запрос на создание/активацию sing-box-пользователя", extra=extra_info_user)
 
         # Пытаемся найти существующего пользователя
         user = SingBoxUser.objects.filter(tg_id=tg_id).first()
@@ -41,17 +37,10 @@ class SingBoxUserViewSet(ModelViewSet):
             if not user.active:
                 user.active = True
                 user.save(update_fields=["active"])
-
-                logger.info(
-                    "Существующий sing-box-пользователь активирован",
-                    extra={
-                        "id": user.id,
-                        "tg_id": user.tg_id,
-                        "tg_username": tg_username,
-                    },
-                )
-
                 self._after_change()
+                logger.info("Существующий sing-box-пользователь активирован", extra={"id": user.id, **extra_info_user})
+            else:
+                logger.warn("Существующий sing-box-пользователь уже активирован", extra={"id": user.id, **extra_info_user}) #TODO сделать выше проверку, зачем активированного пробовать?
 
             serializer = self.get_serializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -60,19 +49,11 @@ class SingBoxUserViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-
-        logger.info(
-            "Sing-box-пользователь успешно создан",
-            extra={
-                "id": user.id,
-                "tg_id": user.tg_id,
-                "tg_username": tg_username,
-            },
-        )
-
         self._after_change()
+        logger.info("Sing-box-пользователь успешно создан", extra={"id": user.id, **extra_info_user})
 
-        headers = self.get_success_headers(serializer.data)
+
+        headers = self.get_success_headers(serializer.data) #TODO это наверное не надо, надо наверное hmac
         return Response(
             serializer.data,
             status=status.HTTP_201_CREATED,

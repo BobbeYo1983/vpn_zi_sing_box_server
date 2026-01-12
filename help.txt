@@ -134,3 +134,6 @@ systemctl status sing-box.path
 
 # Смотреть логи
 journalctl -u sing-box-reload.service -n 20
+
+# Установить расширения
+- Docker

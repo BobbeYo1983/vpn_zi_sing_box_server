@@ -22,6 +22,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'utils.hmac.HMACAuthMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -80,13 +81,12 @@ REST_FRAMEWORK = {
     ],
 }
 
-#CORS_ALLOWED_ORIGINS = ["https://vpnzi.ru"]
-#CORS_ALLOW_ALL_ORIGINS = True
+# HMAC
+HMAC_SERVICES = {
+    "vpn_zi_server": "hmac_secret_vpn_zi", #TODO подтягивать из .env
+}
 
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# FORCE_SCRIPT_NAME = "/sb"
-# USE_X_FORWARDED_HOST = True
-# USE_X_FORWARDED_PORT = True
+HMAC_MAX_SKEW = 60  # допустимое расхождение времени (сек) сервисов
 
 
 
