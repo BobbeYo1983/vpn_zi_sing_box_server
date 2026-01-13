@@ -10,7 +10,7 @@ class Result:
     Гарантированные поля:
     - ok: bool — True при успехе, False при любой ошибке
     - data: Any|None — полезные данные только при ok=True
-    - _error: str|None — человекочитаемое описание ошибки при ok=False  
+    - error: str|None — человекочитаемое описание ошибки при ok=False  
     - status_code: int|None — HTTP-код (опционально, для HTTP-запросов)
     
     Использование:
@@ -21,13 +21,8 @@ class Result:
     
     ok: bool
     data: Optional[Any] = None
-    _error: Optional[AnyStr] = None
+    error: Optional[AnyStr] = None
     status_code: Optional[int] = None
-
-    # getter, чтобы не перекрывал метод error ниже
-    @property #добавь getter
-    def error(self) -> Optional[str]:
-        return self._error
     
     # region Фабричные методы (classmethods) — удобные конструкторы ###########################
     
@@ -58,7 +53,7 @@ class Result:
         )
     
     @classmethod
-    def error(
+    def failure(
         cls, 
         error: AnyStr, 
         data: Optional[Any] = None,
@@ -79,7 +74,7 @@ class Result:
         return cls(
             ok=False,
             data=data,
-            _error=str(error),  # всегда str для logger.error
+            error=str(error),  # всегда str для logger.error
             status_code=status_code
         )
     
@@ -101,7 +96,7 @@ class Result:
         return {
             "ok": self.ok,
             "data": self.data,
-            "error": self._error,
+            "error": self.error,
             "status_code": self.status_code,
         }
     
@@ -122,15 +117,16 @@ class Result:
         from django.http import JsonResponse
         
         response_data = {"status": "ok" if self.ok else "error"}
+
         if self.ok:
             response_data["data"] = self.data or {}
         else:
-            response_data["error"] = self._error
+            response_data["error"] = self.error
         
         if extra_data:
             response_data.update(extra_data)
         
         return JsonResponse(
             response_data, 
-            status=status or 200
+            status=status if status is not None else self.status_code
         )

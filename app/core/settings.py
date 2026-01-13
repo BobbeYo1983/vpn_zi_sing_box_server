@@ -83,7 +83,7 @@ REST_FRAMEWORK = {
 
 # HMAC
 HMAC_SERVICES = {
-    "vpn_zi_server": "hmac_secret_vpn_zi", #TODO подтягивать из .env
+    "server": "hmac_secret_vpn_zi", #TODO подтягивать из .env
 }
 
 HMAC_MAX_SKEW = 60  # допустимое расхождение времени (сек) сервисов

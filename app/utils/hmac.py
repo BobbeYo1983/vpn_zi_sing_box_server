@@ -85,7 +85,7 @@ def verify_hmac_request(request) -> Result:
                 "path": request.path,
             },
         )
-        return Result.error(
+        return Result.failure(
             error=msg,
             status_code=401,
         )
@@ -100,7 +100,7 @@ def verify_hmac_request(request) -> Result:
                 "path": request.path,
             },
         )
-        return Result.error(
+        return Result.failure(
             error=msg,
             status_code=401,
         )
@@ -113,7 +113,7 @@ def verify_hmac_request(request) -> Result:
             msg,
             extra={"service": service},
         )
-        return Result.error(
+        return Result.failure(
             error=msg,
             status_code=401,
         )
@@ -129,7 +129,7 @@ def verify_hmac_request(request) -> Result:
                 "now": now,
             },
         )
-        return Result.error(
+        return Result.failure(
             error=msg,
             status_code=401,
         )
@@ -158,7 +158,7 @@ def verify_hmac_request(request) -> Result:
                 "path": request.path,
             },
         )
-        return Result.error(
+        return Result.failure(
             error=msg,
             status_code=401,
         )
