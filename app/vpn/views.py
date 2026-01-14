@@ -86,9 +86,13 @@ class SingBoxUserViewSet(ModelViewSet):
         Деактивирует sing-box-пользователя, но оставляет в БД.
         """
         tg_id = request.data.get("tg_id")
-        if not tg_id:
+        tg_username = request.data.get("tg_username")
+
+        if not tg_id or not tg_username:
+            msg = "Sing-box пользователь не деактивирован по запросу, так как поля tg_id и tg_username обязательны"
+            logger.error(msg)
             return Response(
-                {"detail": "tg_id обязателен"},
+                {"detail": msg},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 

@@ -23,7 +23,7 @@ def build_users():
             "uuid": str(u.uuid),
             "flow": FLOW,
         }
-        for u in SingBoxUser.objects.filter(enabled=True) # только активные пользователи
+        for u in SingBoxUser.objects.filter(active=True) # только активные пользователи
     ]
 
 def write_config():

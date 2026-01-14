@@ -6,9 +6,45 @@ import time
 from typing import Optional, Dict, Any
 from django.conf import settings
 from utils.result import Result
+from urllib.parse import urlparse
 
 
 logger = logging.getLogger(__name__)
+
+
+def build_hmac_message(
+    *,
+    timestamp: int,
+    method: str,
+    path: str,
+    payload: Optional[Dict[str, Any]] = None,
+) -> str:
+    """
+    Формирует каноническую строку для HMAC.
+
+    ⚠️ ЭТА ФУНКЦИЯ ДОЛЖНА ИСПОЛЬЗОВАТЬСЯ
+    И КЛИЕНТОМ, И СЕРВЕРОМ БЕЗ ИЗМЕНЕНИЙ
+    """
+
+    method = method.upper()
+
+    # GET — всегда пустое тело
+    if method == "GET" or payload is None:
+        body = ""
+    else:
+        body = json.dumps(
+            payload,
+            separators=(",", ":"),
+            sort_keys=True,
+            ensure_ascii=False,
+        )
+
+    return "\n".join([
+        str(timestamp),
+        method,
+        path,
+        body,
+    ])
 
 
 def build_hmac_headers(
@@ -20,7 +56,7 @@ def build_hmac_headers(
     payload: Optional[Dict[str, Any]],
 ) -> Dict[str, str]:
     """
-    Формирует HMAC-заголовки для подписи HTML-запросов
+    Формирует HMAC-заголовки для подписи HTML-запросов на клиенте
     
     :param secret: Секрет
     :type secret: str
@@ -38,20 +74,15 @@ def build_hmac_headers(
 
     timestamp = int(time.time())
 
-    body_str = (
-        json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
-        if payload and method.upper() != "GET"
-        else ""
+    parsed = urlparse(url)
+    path = parsed.path  # ❗ БЕЗ query string
+
+    message = build_hmac_message(
+        timestamp=timestamp,
+        method=method,
+        path=path,
+        payload=payload,
     )
-
-    path = "/" + url.split("/", 3)[-1].split("?", 1)[0]
-
-    message = "\n".join([
-        str(timestamp),
-        method.upper(),
-        path,
-        body_str,
-    ])
 
     signature = hmac.new(
         key=secret.encode(),
@@ -76,72 +107,46 @@ def verify_hmac_request(request) -> Result:
     signature = request.headers.get("X-Signature")
 
     if not service or not timestamp or not signature:
-        msg = "Отсутствуют HMAC-заголовки"
-        logger.warning(
-            msg,
-            extra={
-                "service": service,
-                "timestamp": timestamp,
-                "path": request.path,
-            },
-        )
         return Result.failure(
-            error=msg,
+            error="Отсутствуют HMAC-заголовки",
             status_code=401,
         )
 
     secret = settings.HMAC_SERVICES.get(service)
     if not secret:
-        msg = "Запрос от неизвестного сервиса"
-        logger.warning(
-            msg,
-            extra={
-                "service": service,
-                "path": request.path,
-            },
-        )
         return Result.failure(
-            error=msg,
+            error="Запрос от неизвестного сервиса",
             status_code=401,
         )
 
     try:
         timestamp = int(timestamp)
     except ValueError:
-        msg = "Некорректная временная метка"
-        logger.warning(
-            msg,
-            extra={"service": service},
-        )
         return Result.failure(
-            error=msg,
+            error="Некорректная временная метка",
             status_code=401,
         )
 
     now = int(time.time())
     if abs(now - timestamp) > settings.HMAC_MAX_SKEW:
-        msg = "Временная метка запроса истекла"
-        logger.warning(
-            msg,
-            extra={
-                "service": service,
-                "timestamp": timestamp,
-                "now": now,
-            },
-        )
         return Result.failure(
-            error=msg,
+            error="Временная метка запроса истекла",
             status_code=401,
         )
 
-    body = request.body.decode() if request.body else ""
+    payload = None
+    if request.body:
+        try:
+            payload = json.loads(request.body.decode())
+        except json.JSONDecodeError:
+            payload = None
 
-    message = "\n".join([
-        str(timestamp),
-        request.method.upper(),
-        request.path,
-        body,
-    ])
+    message = build_hmac_message(
+        timestamp=timestamp,
+        method=request.method,
+        path=request.path,  # ❗ Django path БЕЗ query
+        payload=payload,
+    )
 
     expected_signature = hmac.new(
         key=secret.encode(),
@@ -150,21 +155,20 @@ def verify_hmac_request(request) -> Result:
     ).hexdigest()
 
     if not hmac.compare_digest(expected_signature, signature):
-        msg = "Некорректная подпись запроса"
         logger.warning(
-            msg,
+            "Некорректная подпись запроса",
             extra={
                 "service": service,
                 "path": request.path,
             },
         )
         return Result.failure(
-            error=msg,
+            error="Некорректная подпись запроса",
             status_code=401,
         )
 
-    # ✅ Всё хорошо
     return Result.success()
+
 
 class HMACAuthMiddleware:
     """
