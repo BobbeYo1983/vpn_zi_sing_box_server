@@ -40,7 +40,7 @@ class SingBoxUserViewSet(ModelViewSet):
                 self._after_change()
                 logger.info("Существующий sing-box-пользователь активирован", extra={"id": user.id, **extra_info_user})
             else:
-                logger.warn("Существующий sing-box-пользователь уже активирован", extra={"id": user.id, **extra_info_user}) #TODO сделать выше проверку, зачем активированного пробовать?
+                logger.warning("Существующий sing-box-пользователь уже активирован", extra={"id": user.id, **extra_info_user}) #TODO сделать выше проверку, зачем активированного пробовать?
 
             serializer = self.get_serializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)

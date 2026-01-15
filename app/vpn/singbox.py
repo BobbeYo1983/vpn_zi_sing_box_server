@@ -39,7 +39,7 @@ def write_config():
                 "tag": "vless-in",
                 "listen": "0.0.0.0",
                 "listen_port": SERVER_PORT,  # ОБЯЗАТЕЛЬНО int, не строка
-                "users": build_users(),      # фильтр по enabled=True внутри
+                "users": build_users(),      # фильтр по active=True внутри
                 "tls": {
                     "enabled": True,
                     "server_name": SERVER_NAME,
@@ -96,5 +96,5 @@ def build_vless_uri(user):
         f"&sid={SHORT_ID}"
         f"&flow={FLOW}"
         f"&type=tcp"                
-        f"#{quote(user.tg_username)}({user.tg_id})"
+        f"# VPNzi ({quote(user.tg_username)})"
     )
