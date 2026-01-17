@@ -159,6 +159,8 @@ def verify_hmac_request(request) -> Result:
             "Некорректная подпись запроса",
             extra={
                 "service": service,
+                "ip": request.META.get("REMOTE_ADDR"),
+                "ua": request.META.get("HTTP_USER_AGENT"),
                 "path": request.path,
             },
         )
