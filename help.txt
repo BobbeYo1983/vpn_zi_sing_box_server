@@ -1,3 +1,4 @@
+#TODO установить WireGuard между серверами.
 # SERVICE ##########################################
 
 # Запуск проекта
@@ -135,6 +136,10 @@ systemctl start sing-box.path
 # Проверка
 systemctl status sing-box.path
 
+# Права для Django appuser (UID 1000)
+sudo chown -R 1000:1000 /etc/sing-box
+sudo chmod -R 755 /etc/sing-bo
+
 # Смотреть логи
 journalctl -u sing-box-reload.service -n 20
 
@@ -161,6 +166,10 @@ sudo fail2ban-client status
 
 # Фаервол 
 sudo apt install ufw -y
+
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
 ufw allow 22
 ufw allow 80
 ufw allow 443

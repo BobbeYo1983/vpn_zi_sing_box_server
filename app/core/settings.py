@@ -7,7 +7,8 @@ HOST_IP = os.environ.get("DJANGO_HOST_IP")
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 ALLOWED_HOSTS = [
-    HOST_IP,
+    #HOST_IP,
+    "nginx",
 ]
 
 INSTALLED_APPS = [

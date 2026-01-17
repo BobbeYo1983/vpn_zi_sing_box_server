@@ -10,9 +10,8 @@ services:
       - ./data:/data
       # директория с sing-box конфигурацией
       - /etc/sing-box:/sing-box
-    ports:
-      - "8000:8000"
-    
+    expose:
+      - "8000" 
     # Временная папка для Gunicorn/Django temp files
     tmpfs:
       - /tmp:size=50M
@@ -25,14 +24,26 @@ services:
 
     read_only: true
     restart: unless-stopped
+    networks:
+      - vpn_zi_network
 
   nginx:
     image: nginx:1.25-alpine
-    depends_on:
-      - vpn_zi_sing_box_server
+    container_name: nginx
+    env_file:
+      - .env
     ports:
       - "80:80"
     volumes:
-      - ./deploy/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      # конфигурация
+      #- ./deploy/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      # nginx из шаблона с переменными окружения делает конфигу автоматом сюда /etc/nginx/conf.d/
+      - ./deploy/nginx/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
       - ./data/staticfiles:/data/staticfiles:ro
     restart: unless-stopped
+    networks:
+      - vpn_zi_network
+
+networks:
+  vpn_zi_network:
+    driver: bridge
