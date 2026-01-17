@@ -159,3 +159,21 @@ sudo systemctl enable fail2ban
 sudo systemctl status fail2ban
 sudo fail2ban-client status
 
+# Фаервол 
+sudo apt install ufw -y
+ufw allow 22
+ufw allow 80
+ufw allow 443
+ufw enable
+
+# Смотреть настройки фаервола
+sudo ufw status verbose
+
+# Отключаем вход по ssh по паролю, только по ключам ходить
+sudo nano /etc/ssh/sshd_config
+должно быть
+PasswordAuthentication no
+
+# Автообновление безопасности
+apt install unattended-upgrades
+
