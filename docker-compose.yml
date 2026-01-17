@@ -12,6 +12,18 @@ services:
       - /etc/sing-box:/sing-box
     ports:
       - "8000:8000"
+    
+    # Временная папка для Gunicorn/Django temp files
+    tmpfs:
+      - /tmp:size=50M
+      
+    # Для безопасности
+    cap_drop:
+      - ALL           # УДАЛЯЕТ ВСЕ 14 стандартных привилегий
+    cap_add:
+      - CHOWN         # ДОБАВЛЯЕТ ТОЛЬКО "менять владельца файлов"
+
+    read_only: true
     restart: unless-stopped
 
   nginx:
