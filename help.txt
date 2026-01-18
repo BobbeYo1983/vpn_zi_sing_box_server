@@ -191,6 +191,8 @@ sudo apt install wireguard -y
 # Генерация ключей
 cd /etc/wireguard
 wg genkey | tee privatekey | wg pubkey > publickey
+cat privatekey
+cat publickey
 
 # Конфигурация
 nano /etc/wireguard/wg0.conf
@@ -200,7 +202,6 @@ nano /etc/wireguard/wg0.conf
 PrivateKey = <VPN_ZI_SING_BOX_SERVER_PRIVATE_KEY>
 Address = 10.200.0.2/24
 ListenPort = 51820
-SaveConfig = true
 
 [Peer]
 PublicKey = <VPN_ZI_SERVER_PUBLIC_KEY>
