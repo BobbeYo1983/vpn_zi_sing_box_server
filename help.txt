@@ -1,4 +1,3 @@
-#TODO установить WireGuard между серверами.
 # SERVICE ##########################################
 
 # Запуск проекта
@@ -186,3 +185,52 @@ PasswordAuthentication no
 # Автообновление безопасности
 apt install unattended-upgrades
 
+# Установка WireGuard
+sudo apt install wireguard -y
+
+# Генерация ключей
+cd /etc/wireguard
+wg genkey | tee privatekey | wg pubkey > publickey
+
+# Конфигурация
+nano /etc/wireguard/wg0.conf
+
+# Записать в файл ========================================
+[Interface]
+PrivateKey = <VPN_ZI_SING_BOX_SERVER_PRIVATE_KEY>
+Address = 10.200.0.2/24
+ListenPort = 51820
+SaveConfig = true
+
+[Peer]
+PublicKey = <VPN_ZI_SERVER_PUBLIC_KEY>
+AllowedIPs = 10.200.0.1/32
+#=========================================================
+
+# Разрешаем порт для WireGuard
+ufw allow 51820/udp
+
+# Запуск WireGuard
+wg-quick up wg0
+systemctl enable wg-quick@wg0
+
+# Перезапуск WireGuard
+wg-quick down wg0
+wg-quick up wg0
+
+# Проверка WireGuard, когда настроено с двух сторон
+wg
+# должно быть и обязательно второй блок peer, означающий рукопожатие
+#interface: wg0
+#  public key: J+52muw0xpGMO+5I+LawDeRnjwuZWcuv0HoT7G5ls3Y=
+#  private key: (hidden)
+#  listening port: 51820
+
+#peer: AcskgYzdKHmMMzk7pP7isFWPi8BiFaBJCQYZwuc1tXY=
+#  endpoint: 85.198.90.14:54537
+#  allowed ips: 10.200.0.1/32
+#  latest handshake: 4 seconds ago
+#  transfer: 180 B received, 92 B sent
+
+# Проверка связи с VPN_ZI_SERVER
+ping 10.200.0.1

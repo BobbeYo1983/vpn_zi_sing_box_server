@@ -11,6 +11,7 @@
 import os
 import logging
 import colorlog
+from django.conf import settings
 
 
 # ==========================
@@ -55,12 +56,6 @@ class ExtraColoredFormatter(colorlog.ColoredFormatter):
 
 
 # ==========================
-# Уровень логирования
-# ==========================
-LOG_LEVEL = os.getenv("DJANGO_LOG_LEVEL", "INFO")
-
-
-# ==========================
 # Django LOGGING config
 # ==========================
 LOGGING = {
@@ -97,7 +92,7 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'colored_extra',
-            'level': LOG_LEVEL,
+            'level': settings.LOG_LEVEL,
         },
     },
 
@@ -106,7 +101,7 @@ LOGGING = {
     # --------------------------
     'root': {
         'handlers': ['console'],
-        'level': LOG_LEVEL,
+        'level': settings.LOG_LEVEL,
     },
 
     # --------------------------

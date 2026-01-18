@@ -1,20 +1,15 @@
 import json
 import os
 import logging
-from core.paths import SINGBOX_CONFIG_PATH
 from .models import SingBoxUser
 from urllib.parse import quote
+from django.conf import settings
+from pathlib import Path
 
 
 logger = logging.getLogger(__name__)
 
 FLOW = "xtls-rprx-vision"
-SERVER_IP = os.environ["DJANGO_HOST_IP"]
-SERVER_PORT = int(os.environ["SINGBOX_SERVER_PORT"])
-SERVER_NAME = os.environ["SINGBOX_SERVER_NAME"]
-PRIVATE_KEY = os.environ["SINGBOX_REALITY_PRIVATE_KEY"]
-PUBLIC_KEY = os.environ["SINGBOX_REALITY_PUBLIC_KEY"]
-SHORT_ID = os.environ["SINGBOX_SHORT_ID"]
 
 def build_users():
     return [
@@ -38,19 +33,19 @@ def write_config():
                 "type": "vless",
                 "tag": "vless-in",
                 "listen": "0.0.0.0",
-                "listen_port": SERVER_PORT,  # ОБЯЗАТЕЛЬНО int, не строка
+                "listen_port": settings.SINGBOX_SERVER_PORT,  # ОБЯЗАТЕЛЬНО int, не строка
                 "users": build_users(),      # фильтр по active=True внутри
                 "tls": {
                     "enabled": True,
-                    "server_name": SERVER_NAME,
+                    "server_name": settings.SINGBOX_SERVER_NAME,
                     "reality": {
                         "enabled": True,
                         "handshake": {
-                            "server": SERVER_NAME,
+                            "server": settings.SINGBOX_SERVER_NAME,
                             "server_port": 443
                         },
-                        "private_key": PRIVATE_KEY,
-                        "short_id": [SHORT_ID]
+                        "private_key": settings.SINGBOX_REALITY_PRIVATE_KEY,
+                        "short_id": [settings.SINGBOX_SHORT_ID]
                     }
                 }
             }
@@ -65,7 +60,7 @@ def write_config():
 
     # 2️⃣ ВАЖНО: атомарная запись
     #    Пишем сначала во временный файл рядом с основным
-    tmp_path: Path = SINGBOX_CONFIG_PATH.with_suffix(".tmp")
+    tmp_path: Path = settings.SINGBOX_CONFIG_PATH.with_suffix(".tmp")
 
     tmp_path.write_text(
         json.dumps(
@@ -80,20 +75,20 @@ def write_config():
     #    - гарантированно меняет inode
     #    - systemd path unit это УВИДИТ
     #    - файл никогда не бывает "наполовину записан"
-    os.replace(tmp_path, SINGBOX_CONFIG_PATH)
+    os.replace(tmp_path, settings.SINGBOX_CONFIG_PATH)
 
     logger.info("Создана конфигурация для sing-box")
 
 
 def build_vless_uri(user):
     return (
-        f"vless://{user.uuid}@{SERVER_IP}:{SERVER_PORT}"
+        f"vless://{user.uuid}@{settings.HOST_IP}:{settings.SINGBOX_SERVER_PORT}"
         f"?encryption=none" 
         f"&security=reality"
         f"&fp=firefox"  
-        f"&sni={SERVER_NAME}"
-        f"&pbk={PUBLIC_KEY}"
-        f"&sid={SHORT_ID}"
+        f"&sni={settings.SINGBOX_SERVER_NAME}"
+        f"&pbk={settings.SINGBOX_REALITY_PUBLIC_KEY}"
+        f"&sid={settings.SINGBOX_SHORT_ID}"
         f"&flow={FLOW}"
         f"&type=tcp"                
         f"# VPNzi ({quote(user.tg_username)})"

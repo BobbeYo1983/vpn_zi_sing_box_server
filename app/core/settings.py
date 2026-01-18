@@ -1,10 +1,31 @@
 import os
-from .paths import DATA_DIR
-from utils.logging import LOGGING
+from pathlib import Path
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "0") == "1"
-HOST_IP = os.environ.get("DJANGO_HOST_IP")
+
+# Директории и пути
+BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_DIR = BASE_DIR.parent
+DATA_DIR = PROJECT_DIR / "data"
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+SIGN_BOX_DIR = PROJECT_DIR / "sing-box"
+SIGN_BOX_DIR.mkdir(parents=True, exist_ok=True)
+SINGBOX_CONFIG_PATH = SIGN_BOX_DIR / "config.json"
+
+# Переменные окружения
+HOST_IP = os.environ.get("HOST_IP")
+
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+DEBUG = os.environ.get("DJANGO_DEBUG", "0") == "1"
+LOG_LEVEL = os.environ.get("DJANGO_LOG_LEVEL")
+
+SINGBOX_SERVER_PORT = int(os.environ["SINGBOX_SERVER_PORT"])
+SINGBOX_SERVER_NAME = os.environ["SINGBOX_SERVER_NAME"]
+SINGBOX_REALITY_PRIVATE_KEY = os.environ["SINGBOX_REALITY_PRIVATE_KEY"]
+SINGBOX_REALITY_PUBLIC_KEY = os.environ["SINGBOX_REALITY_PUBLIC_KEY"]
+SINGBOX_SHORT_ID = os.environ["SINGBOX_SHORT_ID"]
+
+# После загрузки переменных окружения грузим настройки логирования
+from utils.logging import LOGGING
 
 ALLOWED_HOSTS = [
     #HOST_IP,
