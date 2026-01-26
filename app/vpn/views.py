@@ -15,7 +15,7 @@ class SingBoxUserViewSet(ModelViewSet):
     queryset = SingBoxUser.objects.all()
     serializer_class = SingBoxUserSerializer
     permission_classes = [AllowAny] 
-    authentication_classes = []  # временно отключаем
+    authentication_classes = []
 
     # приватный метод для повторяющихся действий
     def _after_change(self):
