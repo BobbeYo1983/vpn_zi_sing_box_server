@@ -110,5 +110,11 @@ HMAC_SERVICES = {
 
 HMAC_MAX_SKEW = 60  # допустимое расхождение времени (сек) сервисов
 
+# Чтобы в админку можно было ходить
+CSRF_TRUSTED_ORIGINS = [
+    f"http://{HOST_IP}",
+    f"https://{HOST_IP}",
+]
+
 
 

@@ -77,7 +77,7 @@ def write_config():
     #    - файл никогда не бывает "наполовину записан"
     os.replace(tmp_path, settings.SINGBOX_CONFIG_PATH)
 
-    logger.info("Создана конфигурация для sing-box")
+    logger.debug("Создана конфигурация для sing-box")
 
 
 def build_vless_uri(user):

@@ -27,7 +27,7 @@ class SingBoxUserViewSet(ModelViewSet):
 
         extra_info_user={"tg_id": tg_id, "tg_username": tg_username}
 
-        logger.info("Запрос на создание/активацию sing-box-пользователя", extra=extra_info_user)
+        logger.info("Создание/активация sing-box-пользователя", extra=extra_info_user)
 
         # Пытаемся найти существующего пользователя
         user = SingBoxUser.objects.filter(tg_id=tg_id).first()
@@ -50,7 +50,7 @@ class SingBoxUserViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         self._after_change()
-        logger.info("Sing-box-пользователь успешно создан", extra={"id": user.id, **extra_info_user})
+        logger.debug("Sing-box-пользователь успешно создан", extra={"id": user.id, **extra_info_user})
 
 
         headers = self.get_success_headers(serializer.data) #TODO это наверное не надо, надо наверное hmac
