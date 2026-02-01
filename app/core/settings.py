@@ -14,9 +14,9 @@ SINGBOX_CONFIG_PATH = SIGN_BOX_DIR / "config.json"
 # Переменные окружения
 HOST_IP = os.environ.get("HOST_IP")
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 DEBUG = os.environ.get("DJANGO_DEBUG", "0") == "1"
 LOG_LEVEL = os.environ.get("DJANGO_LOG_LEVEL")
+HMAC_SECRET = os.environ.get("DJANGO_HMAC_SECRET")
 
 SINGBOX_SERVER_PORT = int(os.environ["SINGBOX_SERVER_PORT"])
 SINGBOX_SERVER_NAME = os.environ["SINGBOX_SERVER_NAME"]
@@ -105,7 +105,7 @@ REST_FRAMEWORK = {
 
 # HMAC
 HMAC_SERVICES = {
-    "server": "hmac_secret_vpn_zi", #TODO подтягивать из .env
+    "server": HMAC_SECRET,
 }
 
 HMAC_MAX_SKEW = 60  # допустимое расхождение времени (сек) сервисов

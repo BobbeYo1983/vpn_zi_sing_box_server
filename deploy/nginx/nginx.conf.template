@@ -2,6 +2,7 @@
 limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
 
 server {
+
     listen 80;
     server_name _;
     server_tokens off;
@@ -11,29 +12,24 @@ server {
         return 444;
     }
 
-    location /static/ {
-        alias /data/staticfiles/;
-        autoindex off;
-    }
+    #proxy_set_header Host $host;
+    # ходим через nginx, делаем заголовок, который указать в Django в ALLOWED_HOSTS
+    proxy_set_header Host nginx;
 
-    # Проверка, доходит ли до nginx запрос
-    #location /admin/ {
-    #    return 200 "ADMIN HIT\n";
-    #}
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
 
-    location /admin/ {
-        # устанавливаем лимит запросов и разлешаем всплес на 20 сверху
+    location ^~ /admin/ {
+        # устанавливаем лимит запросов и разлешаем всплеск на 20 сверху
         limit_req zone=api_limit burst=20 nodelay;
         
         proxy_pass http://vpn_zi_sing_box_server:8000;
+    }
 
-        #proxy_set_header Host $host;
-        # ходим через nginx, делаем заголовок, который указать в Django в ALLOWED_HOSTS
-        proxy_set_header Host nginx;
-
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+    location /static/ {
+        alias /data/staticfiles/;
+        autoindex off;
     }
 
     location / {
@@ -41,17 +37,9 @@ server {
         allow ${VPN_ZI_SERVER_IP};
         deny all;
 
-        # устанавливаем лимит запросов и разлешаем всплес на 20 сверху
+        # устанавливаем лимит запросов и разлешаем всплеск на 20 сверху
         limit_req zone=api_limit burst=20 nodelay;
         
         proxy_pass http://vpn_zi_sing_box_server:8000;
-
-        #proxy_set_header Host $host;
-        # ходим через nginx, делаем заголовок, который указать в Django в ALLOWED_HOSTS
-        proxy_set_header Host nginx;
-
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }

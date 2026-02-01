@@ -22,6 +22,8 @@ class SingBoxUserViewSet(ModelViewSet):
         write_config()
 
     def create(self, request, *args, **kwargs):
+        """Создаёт или активирует sing-box-пользователя"""
+
         tg_id = request.data.get("tg_id")
         tg_username = request.data.get("tg_username")
 
@@ -38,9 +40,9 @@ class SingBoxUserViewSet(ModelViewSet):
                 user.active = True
                 user.save(update_fields=["active"])
                 self._after_change()
-                logger.info("Существующий sing-box-пользователь активирован", extra={"id": user.id, **extra_info_user})
+                logger.debug("Существующий sing-box-пользователь активирован", extra={"id": user.id, **extra_info_user})
             else:
-                logger.warning("Существующий sing-box-пользователь уже активирован", extra={"id": user.id, **extra_info_user}) #TODO сделать выше проверку, зачем активированного пробовать?
+                logger.warning("Существующий sing-box-пользователь уже активирован", extra={"id": user.id, **extra_info_user})
 
             serializer = self.get_serializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -52,12 +54,9 @@ class SingBoxUserViewSet(ModelViewSet):
         self._after_change()
         logger.debug("Sing-box-пользователь успешно создан", extra={"id": user.id, **extra_info_user})
 
-
-        headers = self.get_success_headers(serializer.data) #TODO это наверное не надо, надо наверное hmac
         return Response(
             serializer.data,
             status=status.HTTP_201_CREATED,
-            headers=headers,
         )
 
     def perform_update(self, serializer):
@@ -82,11 +81,13 @@ class SingBoxUserViewSet(ModelViewSet):
 
     @action(methods=["post"], detail=False, url_path="deactivate")
     def deactivate(self, request):
-        """
-        Деактивирует sing-box-пользователя, но оставляет в БД.
-        """
+        """Деактивирует sing-box-пользователя, но оставляет в БД."""
+
         tg_id = request.data.get("tg_id")
         tg_username = request.data.get("tg_username")
+        extra_info_user={"tg_id": tg_id, "tg_username": tg_username}
+
+        logger.info("Деактивация sing-box-пользователя", extra=extra_info_user)
 
         if not tg_id or not tg_username:
             msg = "Sing-box пользователь не деактивирован по запросу, так как поля tg_id и tg_username обязательны"
@@ -101,14 +102,5 @@ class SingBoxUserViewSet(ModelViewSet):
         user.save(update_fields=["active"])
 
         self._after_change()
-
-        logger.info(
-            "Sing-box пользователь деактивирован",
-            extra={
-                "id": user.id,
-                "tg_id": user.tg_id,
-                "tg_username": user.tg_username,
-            },
-        )
 
         return Response(status=status.HTTP_204_NO_CONTENT)
