@@ -24,6 +24,8 @@ SINGBOX_REALITY_PRIVATE_KEY = os.environ["SINGBOX_REALITY_PRIVATE_KEY"]
 SINGBOX_REALITY_PUBLIC_KEY = os.environ["SINGBOX_REALITY_PUBLIC_KEY"]
 SINGBOX_SHORT_ID = os.environ["SINGBOX_SHORT_ID"]
 
+SECRET_KEY = "secret_key_vpn_zi_sing_box_server" # должен быть обязательно задан
+
 # После загрузки переменных окружения грузим настройки логирования
 from utils.logging import LOGGING
 
