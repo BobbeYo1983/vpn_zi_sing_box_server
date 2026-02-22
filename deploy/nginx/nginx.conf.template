@@ -26,6 +26,12 @@ server {
         log_not_found off;
     }
 
+    location ~* ^/admin/(upload|files|media|shell|php|\.|backup|old) {
+        return 444;
+        access_log off;
+        log_not_found off;
+    }
+
     location ^~ /admin/ {
         # устанавливаем лимит запросов и разлешаем всплеск на 20 сверху
         limit_req zone=api_limit burst=20 nodelay;
